@@ -5,6 +5,4 @@ require 'pgsnap/connection'
 
 module Pgsnap
   class Error < StandardError; end
-
-  Connection.new
 end

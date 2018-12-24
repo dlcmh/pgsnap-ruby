@@ -2,3 +2,8 @@
 detectors:
   IrresponsibleModule:
     enabled: false
+
+directories:
+  test:
+    InstanceVariableAssumption:
+      enabled: false

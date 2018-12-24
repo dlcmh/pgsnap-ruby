@@ -3,11 +3,15 @@
 require 'test_helper'
 
 class PgsnapTest < Minitest::Test
-  def test_that_it_has_a_version_number
-    refute_nil ::Pgsnap::VERSION
+  def setup
+    @connection = Pgsnap::Connection.new(dbname)
   end
 
-  def test_it_does_something_useful
-    assert false
+  def dbname
+    'drills-api_development'
+  end
+
+  def test_that_it_can_connect
+    assert_equal dbname, @connection.dbname_from_status
   end
 end
