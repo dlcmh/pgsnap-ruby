@@ -1,0 +1,18 @@
+AllCops:
+  Exclude:
+    - bin/**/*
+    - Gemfile
+    - Guardfile
+    - Rakefile
+    - test/test_helper.rb
+    - '*.gemspec'
+  TargetRubyVersion: 2.5.3
+
+Style/Documentation:
+  Enabled: false
+
+Style/Documentation:
+  Enabled: false
+
+Metrics/LineLength:
+  Max: 80
