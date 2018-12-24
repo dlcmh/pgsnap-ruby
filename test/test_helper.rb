@@ -1,4 +1,8 @@
-$LOAD_PATH.unshift File.expand_path("../../lib", __FILE__)
-require "pgsnap"
+# frozen_string_literal: true
 
-require "minitest/autorun"
+require 'pgsnap'
+require 'examples'
+
+require 'minitest/autorun'
+
+DBNAME = 'drills-api_development'

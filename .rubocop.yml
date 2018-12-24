@@ -4,7 +4,6 @@ AllCops:
     - Gemfile
     - Guardfile
     - Rakefile
-    - test/test_helper.rb
     - '*.gemspec'
   TargetRubyVersion: 2.5.3
 

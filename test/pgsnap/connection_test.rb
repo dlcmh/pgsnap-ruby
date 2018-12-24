@@ -4,14 +4,10 @@ require 'test_helper'
 
 class PgsnapTest < Minitest::Test
   def setup
-    @connection = Pgsnap::Connection.new(dbname)
-  end
-
-  def dbname
-    'drills-api_development'
+    @conn = Pgsnap::Connection.new(DBNAME)
   end
 
   def test_that_it_can_connect
-    assert_equal dbname, @connection.dbname_from_status
+    assert_equal DBNAME, @conn.dbname_from_status
   end
 end
