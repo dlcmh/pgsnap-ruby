@@ -8,6 +8,6 @@ class PgsnapTest < Minitest::Test
   end
 
   def test_it_does_something_useful
-    assert true
+    assert false
   end
 end
