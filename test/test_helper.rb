@@ -5,4 +5,6 @@ require 'examples'
 
 require 'minitest/autorun'
 
-DBNAME = 'drills-api_development'
+Pgsnap.set_configuration do |config|
+  config.dbname = 'pgsnap'
+end

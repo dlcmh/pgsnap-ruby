@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
 module Examples
-  class PgStatActivity
+  class PgStatActivityQuery
     SELECT_STATEMENT = 'SELECT * FROM pg_stat_activity'
 
-    attr_reader :conn
+    attr_reader :connection
 
-    def initialize(dbname)
-      @conn = Pgsnap::Connection.new(dbname).conn
+    def initialize
+      @connection = Pgsnap::Connection.new.connection
     end
 
     def query
@@ -17,7 +17,7 @@ module Examples
     private
 
     def result
-      @result ||= conn.exec(SELECT_STATEMENT)
+      @result ||= connection.exec(SELECT_STATEMENT)
     end
   end
 end
