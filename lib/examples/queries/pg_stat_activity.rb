@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Examples
-  class PgStatActivityQuery
+  class PgStatActivity
     SELECT_STATEMENT = 'SELECT * FROM pg_stat_activity'
 
     attr_reader :connection
