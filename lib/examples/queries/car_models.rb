@@ -2,7 +2,7 @@
 
 module Examples
   module Queries
-    class CarModel < Pgsnap::Query
+    class CarModels < Pgsnap::Query
       def select_list
         select_list_item 'cm.year', :year
         select_list_item 'cm.name', :name

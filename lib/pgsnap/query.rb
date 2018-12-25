@@ -2,32 +2,38 @@
 
 module Pgsnap
   class Query
-    attr_reader :sql_command, :sql_command_wip, :select_list_wip
+    attr_reader :select_command, :select_command_wip, :select_list_wip
 
-    def initialize(sql_command = nil)
-      if sql_command
-        @sql_command = sql_command
+    def initialize(select_command = nil)
+      if select_command
+        @select_command = select_command
       else
-        @sql_command_wip = []
+        @select_command_wip = []
         @select_list_wip = []
-        construct_sql_command
-        @sql_command = sql_command_wip.join(' ')
+        construct_select_command
+        @select_command = select_command_wip.join(' ')
       end
     end
 
     def as_subquery
-      "(#{sql_command})"
+      "(#{select_command})"
     end
 
-    def construct_sql_command
-      sql_command_wip << "SELECT"
+    def construct_select_command
+      select_command_wip << "SELECT"
       select_list
-      sql_command_wip << select_list_wip.join(', ')
+      select_command_wip << select_list_wip.join(', ')
       table_expression
     end
 
     def from(table_reference, table_reference_alias)
-      sql_command_wip << "FROM #{table_reference} AS #{table_reference_alias}"
+      select_command_wip <<
+        "FROM #{table_reference} AS #{table_reference_alias}"
+    end
+
+    def inner_join(table_reference, table_reference_alias, on:)
+      select_command_wip <<
+        "INNER JOIN #{table_reference} AS #{table_reference_alias} ON #{on}"
     end
 
     def select_list_item(expression, expression_alias)
@@ -60,7 +66,7 @@ module Pgsnap
 
     def query_execution_result
       @query_execution_result ||=
-        Pgsnap::Connection.new.connection.exec(sql_command)
+        Pgsnap::Connection.new.connection.exec(select_command)
     end
   end
 end
