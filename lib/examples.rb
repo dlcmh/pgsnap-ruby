@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
-require 'examples/config'
+require 'examples/pgsnap_config'
 
+require 'examples/base_tables/car_models'
 require 'examples/car_catalog_query'
 require 'examples/pg_stat_activity_query'
 

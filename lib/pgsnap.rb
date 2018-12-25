@@ -7,7 +7,7 @@ require 'pgsnap/configuration'
 require 'pgsnap/connection'
 require 'pgsnap/base_table'
 require 'pgsnap/query'
-require 'pgsnap/query_result'
+require 'pgsnap/table_columns_cache'
 
 module Pgsnap
   class Error < StandardError; end

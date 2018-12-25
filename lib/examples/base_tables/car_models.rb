@@ -4,7 +4,7 @@ module Examples
   module BaseTables
     class CarModels < Pgsnap::BaseTable
       def initialize
-        super('car_models')
+        super(table_name: :car_models)
       end
     end
   end

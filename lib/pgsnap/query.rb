@@ -9,7 +9,7 @@ module Pgsnap
     end
 
     def column_name(idx)
-      query_execution_result.fname(idx)
+      query_execution_result.fname(idx).to_sym
     end
 
     def columns
