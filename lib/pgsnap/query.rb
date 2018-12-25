@@ -15,6 +15,10 @@ module Pgsnap
       end
     end
 
+    def as_subquery
+      "(#{sql_command})"
+    end
+
     def construct_sql_command
       sql_command_wip << "SELECT"
       select_list

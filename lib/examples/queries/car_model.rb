@@ -2,7 +2,7 @@
 
 module Examples
   module Queries
-    class CarCatalog < Pgsnap::Query
+    class CarModel < Pgsnap::Query
       def select_list
         select_list_item 'cm.year', :year
         select_list_item 'cm.name', :name
@@ -10,8 +10,6 @@ module Examples
 
       def table_expression
         from :car_models, :cm
-        # inner_join :car_brands
-        # on car_models.c(car_brand_id), '=', car_brands.c(id)
       end
     end
   end
