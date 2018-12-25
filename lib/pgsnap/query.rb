@@ -2,7 +2,8 @@
 
 module Pgsnap
   class Query
-    attr_reader :select_command, :select_command_wip, :select_list_wip
+    attr_reader :select_command, :select_command_wip,
+                :select_list_wip, :sort_list_wip
 
     def initialize(select_command = nil)
       if select_command
@@ -10,6 +11,7 @@ module Pgsnap
       else
         @select_command_wip = []
         @select_list_wip = []
+        @sort_list_wip = []
         construct_select_command
         @select_command = select_command_wip.join(' ')
       end
@@ -24,11 +26,18 @@ module Pgsnap
       select_list
       select_command_wip << select_list_wip.join(', ')
       table_expression
+      order_by_clause
+      select_command_wip <<
+        "ORDER BY #{sort_list_wip.join(', ')}"
     end
 
     def from(table_reference, table_reference_alias)
       select_command_wip <<
         "FROM #{table_reference} AS #{table_reference_alias}"
+    end
+
+    def sort(sort_expression, direction = 'ASC')
+      sort_list_wip << "#{sort_expression} #{direction.upcase}"
     end
 
     def inner_join(table_reference, table_reference_alias, on:)

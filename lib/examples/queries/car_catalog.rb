@@ -13,6 +13,11 @@ module Examples
         select_list_item 'cm.year', :year
         select_list_item 'cm.name', :name
       end
+
+      def order_by_clause
+        sort :brand
+        sort :year, :desc
+      end
     end
   end
 end
