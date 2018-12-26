@@ -6,6 +6,7 @@ require 'pgsnap/configuration'
 
 require 'pgsnap/connection'
 require 'pgsnap/base_table'
+require 'pgsnap/pg_result'
 require 'pgsnap/query'
 require 'pgsnap/table_columns_cache'
 

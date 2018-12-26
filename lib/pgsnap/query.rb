@@ -17,18 +17,35 @@ module Pgsnap
       end
     end
 
+    # Start: optional - ORDER BY
+    def order_by_clause; end
+
+    def construct_order_by_clause
+      return unless order_by_clause
+      select_command_wip << "ORDER BY #{sort_list_wip.join(', ')}"
+    end
+    # End: optional - ORDER BY
+
+    def as_subquery
+      "(#{select_command})"
+    end
+
+    # Start: SELECT list
+    def construct_select_list
+      select_list
+      select_command_wip << select_list_wip.join(', ')
+    end
+    # End: SELECT list
+
     def as_subquery
       "(#{select_command})"
     end
 
     def construct_select_command
       select_command_wip << "SELECT"
-      select_list
-      select_command_wip << select_list_wip.join(', ')
+      construct_select_list
       table_expression
-      order_by_clause
-      select_command_wip <<
-        "ORDER BY #{sort_list_wip.join(', ')}"
+      construct_order_by_clause
     end
 
     def from(table_reference, table_reference_alias)
@@ -45,37 +62,20 @@ module Pgsnap
         "INNER JOIN #{table_reference} AS #{table_reference_alias} ON #{on}"
     end
 
-    def select_list_item(expression, expression_alias)
+    def select_list_item(expression, expression_alias = nil)
+      return expression if expression[/^.+\.(\*)$/, 1] # table_name.* expression
+      raise Error, 'expression_alias cannot be empty' unless expression_alias
       select_list_wip << "#{expression} AS #{expression_alias}"
     end
 
-    def column_name(idx)
-      query_execution_result.fname(idx).to_sym
-    end
-
-    def columns
-      (0..(number_of_columns - 1)).map { |idx| column_name(idx) }
-    end
-
-    def number_of_columns
-      query_execution_result.nfields
-    end
-
-    def number_of_rows
-      query_execution_result.ntuples
-    end
-
-    def result
-      number_of_rows == 1 ? values.first : values
-    end
-
-    def values
-      query_execution_result.values
-    end
-
-    def query_execution_result
-      @query_execution_result ||=
+    def execute
+      @pg_result ||= Pgsnap::PgResult.new(
         Pgsnap::Connection.new.connection.exec(select_command)
+      )
     end
+
+    private
+
+    attr_reader :pg_result
   end
 end
