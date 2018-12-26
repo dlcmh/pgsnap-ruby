@@ -1,10 +1,14 @@
 # frozen_string_literal: true
 
 module Pgsnap
+  PGU = Pgsnap::Utils
+
   # :reek:TooManyInstanceVariables
   class Query
-    attr_reader :pg_result, :pg_result_values, :select_command,
-                :select_command_wip, :select_list_wip, :sort_list_wip
+    attr_reader :pg_result, :pg_result_values,
+                :pg_result_json, :pg_result_json_body,
+                :select_command, :select_command_wip, :select_list_wip,
+                :sort_list_wip
 
     def initialize(select_command = nil)
       if select_command
@@ -58,18 +62,25 @@ module Pgsnap
         "INNER JOIN #{table_reference} AS #{table_reference_alias} ON #{on}"
     end
 
-    def result
-      return pg_result_values if pg_result_values
+    def select_command_json
+      "SELECT ROW_TO_JSON(rel) FROM (#{select_command}) rel"
+    end
 
-      set_pg_result
-      pg_result_values
+    def json
+      return pg_result_json if pg_result_json
+
+      @pg_result_json = Pgsnap::PgResult.new(select_command_json)
+      @pg_result_json_body = pg_result_json.result
+    end
+
+    def result
+      return pg_result if pg_result
+
+      @pg_result = Pgsnap::PgResult.new(select_command)
+      @pg_result_values = pg_result.result
     end
 
     private
-
-    def pgu
-      @pgu ||= Pgsnap::Utils
-    end
 
     def select_list_item(expression, expression_alias = nil)
       # handles 'table_name.*' expression
@@ -80,17 +91,10 @@ module Pgsnap
       select_list_wip << "#{expression} AS #{expression_alias}"
     end
 
-    def set_pg_result
-      @pg_result = Pgsnap::PgResult.new(
-        Pgsnap::Connection.new.connection.exec(select_command)
-      )
-      @pg_result_values = pg_result.result
-    end
-
     def values(*expression)
-      squished = pgu.squish(expression)
-      wrapped_in_single_quotes = pgu.wrap_in_single_quotes(squished)
-      comma_joined = pgu.join_with_comma(wrapped_in_single_quotes)
+      squished = PGU.squish(expression)
+      wrapped_in_single_quotes = PGU.wrap_in_single_quotes(squished)
+      comma_joined = PGU.join_with_comma(wrapped_in_single_quotes)
       "(VALUES(#{comma_joined}))"
     end
   end

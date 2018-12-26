@@ -2,8 +2,9 @@
 
 module Pgsnap
   class PgResult
-    def initialize(pg_result)
-      @pg_result = pg_result
+    def initialize(select_command)
+      @select_command = select_command
+      set_pg_result
     end
 
     def columns
@@ -28,10 +29,16 @@ module Pgsnap
 
     private
 
-    attr_reader :pg_result
+    attr_reader :pg_result, :select_command
 
     def column_name(idx)
       pg_result.fname(idx).to_sym
+    end
+
+    def set_pg_result
+      pg_result || @pg_result = Pgsnap::Connection.new.connection.exec(
+        select_command
+      )
     end
   end
 end
