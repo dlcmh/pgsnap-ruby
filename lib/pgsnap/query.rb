@@ -22,6 +22,7 @@ module Pgsnap
 
     def construct_order_by_clause
       return unless order_by_clause
+
       select_command_wip << "ORDER BY #{sort_list_wip.join(', ')}"
     end
     # End: optional - ORDER BY
@@ -30,19 +31,13 @@ module Pgsnap
       "(#{select_command})"
     end
 
-    # Start: SELECT list
     def construct_select_list
       select_list
       select_command_wip << select_list_wip.join(', ')
     end
-    # End: SELECT list
-
-    def as_subquery
-      "(#{select_command})"
-    end
 
     def construct_select_command
-      select_command_wip << "SELECT"
+      select_command_wip << 'SELECT'
       construct_select_list
       table_expression
       construct_order_by_clause
@@ -64,18 +59,16 @@ module Pgsnap
 
     def select_list_item(expression, expression_alias = nil)
       return expression if expression[/^.+\.(\*)$/, 1] # table_name.* expression
+
       raise Error, 'expression_alias cannot be empty' unless expression_alias
+
       select_list_wip << "#{expression} AS #{expression_alias}"
     end
 
     def execute
-      @pg_result ||= Pgsnap::PgResult.new(
+      @execute ||= Pgsnap::PgResult.new(
         Pgsnap::Connection.new.connection.exec(select_command)
       )
     end
-
-    private
-
-    attr_reader :pg_result
   end
 end

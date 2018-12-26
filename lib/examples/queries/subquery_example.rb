@@ -8,10 +8,12 @@ module Examples
       end
 
       def table_expression
-        from car_model_subquery, :sq1
+        from car_model_sq, :sq1
       end
 
-      def car_model_subquery
+      private
+
+      def car_model_sq
         Examples::Queries::CarModel.new.as_subquery
       end
     end
