@@ -1,9 +1,12 @@
 # frozen_string_literal: true
 
 module Pgsnap
+  # :reek:TooManyInstanceVariables
   class Query
-    attr_reader :select_command, :select_command_wip,
-                :select_list_wip, :sort_list_wip
+    using Pgsnap::Utils::Refinements
+
+    attr_reader :pg_result, :pg_result_values, :select_command,
+                :select_command_wip, :select_list_wip, :sort_list_wip
 
     def initialize(select_command = nil)
       if select_command
@@ -57,18 +60,33 @@ module Pgsnap
         "INNER JOIN #{table_reference} AS #{table_reference_alias} ON #{on}"
     end
 
+    def result
+      return pg_result_values if pg_result_values
+
+      set_pg_result
+      pg_result_values
+    end
+
+    private
+
     def select_list_item(expression, expression_alias = nil)
-      return expression if expression[/^.+\.(\*)$/, 1] # table_name.* expression
+      # handles 'table_name.*' expression
+      return select_list_wip << expression if expression[/^.+\.(\*)$/, 1]
 
       raise Error, 'expression_alias cannot be empty' unless expression_alias
 
       select_list_wip << "#{expression} AS #{expression_alias}"
     end
 
-    def execute
-      @execute ||= Pgsnap::PgResult.new(
+    def set_pg_result
+      @pg_result = Pgsnap::PgResult.new(
         Pgsnap::Connection.new.connection.exec(select_command)
       )
+      @pg_result_values = pg_result.values
+    end
+
+    def values(*expression)
+      "VALUES(#{Pgsnap::Utils.squish(expression).join(', ')})".parens_wrapped
     end
   end
 end
