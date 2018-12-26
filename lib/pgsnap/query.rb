@@ -3,8 +3,6 @@
 module Pgsnap
   # :reek:TooManyInstanceVariables
   class Query
-    using Pgsnap::Utils::Refinements
-
     attr_reader :pg_result, :pg_result_values, :select_command,
                 :select_command_wip, :select_list_wip, :sort_list_wip
 
@@ -69,6 +67,10 @@ module Pgsnap
 
     private
 
+    def pgu
+      @pgu ||= Pgsnap::Utils
+    end
+
     def select_list_item(expression, expression_alias = nil)
       # handles 'table_name.*' expression
       return select_list_wip << expression if expression[/^.+\.(\*)$/, 1]
@@ -82,11 +84,14 @@ module Pgsnap
       @pg_result = Pgsnap::PgResult.new(
         Pgsnap::Connection.new.connection.exec(select_command)
       )
-      @pg_result_values = pg_result.values
+      @pg_result_values = pg_result.result
     end
 
     def values(*expression)
-      "VALUES(#{Pgsnap::Utils.squish(expression).join(', ')})".parens_wrapped
+      squished = pgu.squish(expression)
+      wrapped_in_single_quotes = pgu.wrap_in_single_quotes(squished)
+      comma_joined = pgu.join_with_comma(wrapped_in_single_quotes)
+      "(VALUES(#{comma_joined}))"
     end
   end
 end
