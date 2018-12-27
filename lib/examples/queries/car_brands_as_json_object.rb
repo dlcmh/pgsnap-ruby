@@ -1,14 +1,16 @@
 # frozen_string_literal: true
 
+require_relative 'query_index'
+
 module Examples
   module Queries
     class CarBrandsAsJsonObject < Pgsnap::Query
       def select_list
-        select_list_item 'cb.name', :name
+        select_list_item 'cb.*'
       end
 
       def table_expression
-        from :car_brands, :cb
+        from Examples::Queries::QueryIndex.car_brands, :cb
         limit 1
       end
 

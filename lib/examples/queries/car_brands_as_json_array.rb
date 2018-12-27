@@ -8,7 +8,7 @@ module Examples
       end
 
       def table_expression
-        from :car_brands, :cb
+        from Examples::Queries::QueryIndex.car_brands, :cb
         limit 3
       end
 
