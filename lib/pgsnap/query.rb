@@ -10,6 +10,10 @@ module Pgsnap
       construct_command
     end
 
+    def command
+      _cmd.command
+    end
+
     def from(table_reference, table_reference_alias)
       _cmd.from(table_reference, table_reference_alias)
     end
