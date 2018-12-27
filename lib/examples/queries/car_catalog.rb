@@ -20,7 +20,7 @@ module Examples
       end
 
       def result
-        json_array_result
+        json_result
       end
     end
   end

@@ -5,8 +5,6 @@ require 'examples/pgsnap_config'
 require 'examples/base_tables/car_models'
 
 require 'examples/queries/car_brands'
-require 'examples/queries/car_brands_as_json_array'
-require 'examples/queries/car_brands_as_json_object'
 require 'examples/queries/car_catalog'
 require 'examples/queries/car_models'
 require 'examples/queries/employees'

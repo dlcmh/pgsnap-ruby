@@ -31,12 +31,8 @@ module Pgsnap
       @select_command ||= stringified_command
     end
 
-    def select_command_json_array
+    def select_command_json
       "SELECT JSON_AGG(relation) FROM (#{select_command}) relation"
-    end
-
-    def select_command_json_object
-      "SELECT TO_JSON(relation) FROM (#{select_command}) relation"
     end
 
     def select_list_item(expression, expression_alias)

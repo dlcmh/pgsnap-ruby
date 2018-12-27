@@ -18,13 +18,8 @@ module Pgsnap
       _cmd.inner_join(table_reference, table_reference_alias, on)
     end
 
-    def json_array_result
-      @json_array_result ||= _result.new(select_command_json_array).json_result
-    end
-
-    def json_object_result
-      @json_object_result ||=
-        _result.new(select_command_json_object).json_result
+    def json_result
+      @json_result ||= _result.new(select_command_json).json_result
     end
 
     def limit(number_of_rows)
@@ -43,12 +38,8 @@ module Pgsnap
       _cmd.select_command
     end
 
-    def select_command_json_array
-      _cmd.select_command_json_array
-    end
-
-    def select_command_json_object
-      _cmd.select_command_json_object
+    def select_command_json
+      _cmd.select_command_json
     end
 
     def select_list_item(expression, expression_alias = nil)

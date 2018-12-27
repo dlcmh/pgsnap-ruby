@@ -10,6 +10,10 @@ module Examples
       def table_expression
         from :car_brands, :cb
       end
+
+      def result
+        json_result
+      end
     end
   end
 end
