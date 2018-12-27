@@ -78,8 +78,8 @@ module Pgsnap
     def stringified_command
       [
         _util.build_clause('SELECT', select_list, ','),
-        _util.build_clause('FROM', table_expression, ','),
-        _util.build_clause('ORDER_BY', order_by_clause, ','),
+        _util.build_clause('FROM', table_expression, ' '),
+        _util.build_clause('ORDER BY', order_by_clause, ','),
         _util.build_scalar('LIMIT', limit_clause.first)
       ].compact.join(' ')
     end

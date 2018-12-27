@@ -6,7 +6,7 @@ module Pgsnap
       def build_clause(clause, content_array, separator)
         return unless content_array.length.positive?
 
-        pretty_separator = "#{separator} " unless separator == ' '
+        pretty_separator = separator == ' ' ? separator : "#{separator} "
         "#{clause} #{content_array.join(pretty_separator)}"
       end
 
