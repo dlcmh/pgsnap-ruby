@@ -4,10 +4,14 @@ module Pgsnap
   module Utils
     class << self
       def build_clause(clause, content_array, separator)
-        return unless content_array.size.positive?
+        return unless content_array.length.positive?
 
         pretty_separator = "#{separator} " unless separator == ' '
         "#{clause} #{content_array.join(pretty_separator)}"
+      end
+
+      def build_scalar(clause, content)
+        "#{clause} #{content}" if content
       end
 
       # '   i    wanna  be     squished'

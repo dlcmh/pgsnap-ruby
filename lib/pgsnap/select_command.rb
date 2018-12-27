@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
 module Pgsnap
+  # :reek:TooManyMethods
   class SelectCommand
     attr_reader :command
 
     def initialize
-      @util = Pgsnap::Utils
+      @_util = Pgsnap::Utils
       @command = {}
     end
 
@@ -18,6 +19,10 @@ module Pgsnap
         "INNER JOIN #{table_reference} AS #{table_reference_alias} ON #{on}"
     end
 
+    def limit(number_of_rows)
+      limit_clause << number_of_rows
+    end
+
     def relation(query_class, relation_alias)
       cmd.relation(query_class, relation_alias)
     end
@@ -26,8 +31,12 @@ module Pgsnap
       @select_command ||= stringified_command
     end
 
-    def select_command_json
-      "SELECT ROW_TO_JSON(relation) FROM (#{select_command}) relation"
+    def select_command_json_array
+      "SELECT JSON_AGG(relation) FROM (#{select_command}) relation"
+    end
+
+    def select_command_json_object
+      "SELECT TO_JSON(relation) FROM (#{select_command}) relation"
     end
 
     def select_list_item(expression, expression_alias)
@@ -44,15 +53,19 @@ module Pgsnap
     end
 
     def values(*expression)
-      squished = util.squish(expression)
-      wrapped_in_single_quotes = util.wrap_in_single_quotes(squished)
-      comma_joined = util.join_with_comma(wrapped_in_single_quotes)
+      squished = _util.squish(expression)
+      wrapped_in_single_quotes = _util.wrap_in_single_quotes(squished)
+      comma_joined = _util.join_with_comma(wrapped_in_single_quotes)
       "(VALUES(#{comma_joined}))"
     end
 
     private
 
-    attr_reader :util
+    attr_reader :_util
+
+    def limit_clause
+      command[:limit_clause] ||= []
+    end
 
     def order_by_clause
       command[:order_by_clause] ||= []
@@ -64,9 +77,10 @@ module Pgsnap
 
     def stringified_command
       [
-        util.build_clause('SELECT', select_list, ','),
-        util.build_clause('FROM', table_expression, ','),
-        util.build_clause('ORDER_BY', order_by_clause, ',')
+        _util.build_clause('SELECT', select_list, ','),
+        _util.build_clause('FROM', table_expression, ','),
+        _util.build_clause('ORDER_BY', order_by_clause, ','),
+        _util.build_scalar('LIMIT', limit_clause.first)
       ].compact.join(' ')
     end
 
