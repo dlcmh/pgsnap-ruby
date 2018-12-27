@@ -50,6 +50,14 @@ module Pgsnap
 
         content
       end
+
+      # [1, "'i wanna be wrapped in single quotes'"]
+      # => "1, 'i wanna be wrapped in single quotes'"
+      def join_with_space(content)
+        return content.join(' ') if content.is_a?(Array)
+
+        content
+      end
     end
   end
 end

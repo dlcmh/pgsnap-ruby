@@ -8,6 +8,7 @@ require 'pgsnap/utils'
 
 require 'pgsnap/connection'
 require 'pgsnap/base_table'
+require 'pgsnap/nested_json'
 require 'pgsnap/pg_result'
 require 'pgsnap/select_command'
 require 'pgsnap/query'

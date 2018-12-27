@@ -19,12 +19,16 @@ module Pgsnap
       pg_result.ntuples
     end
 
-    def json_result
+    def array_of_hashes
       native_result.first
     end
 
     def native_result
       number_of_rows == 1 ? values.first : values
+    end
+
+    def nested_json
+      native_result.first
     end
 
     def values

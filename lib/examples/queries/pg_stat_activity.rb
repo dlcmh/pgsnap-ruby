@@ -2,8 +2,6 @@
 
 module Examples
   class PgStatActivity
-    SELECT_STATEMENT = 'SELECT * FROM pg_stat_activity'
-
     attr_reader :connection
 
     def initialize
@@ -17,7 +15,7 @@ module Examples
     private
 
     def result
-      @result ||= connection.exec(SELECT_STATEMENT)
+      @result ||= connection.exec('SELECT * FROM pg_stat_activity')
     end
   end
 end
