@@ -22,6 +22,10 @@ module Pgsnap
       command.values.join(' ')
     end
 
+    def select_command_json
+      "SELECT ROW_TO_JSON(relation) FROM (#{select_command}) relation"
+    end
+
     def select_list_item(expression, expression_alias = nil)
       # handles 'table_name.*' expression
       return select_list << expression if expression[/^.+\.(\*)$/, 1]

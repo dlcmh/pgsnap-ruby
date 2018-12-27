@@ -4,6 +4,7 @@ module Pgsnap
   class Query
     def initialize
       @cmd = Pgsnap::SelectCommand.new
+      @result = Pgsnap::PgResult
       construct_command
     end
 
@@ -15,8 +16,20 @@ module Pgsnap
       cmd.inner_join(table_reference, table_reference_alias, on: on)
     end
 
+    def json_result
+      @json_result ||= result.new(select_command_json).json_result
+    end
+
+    def native_result
+      @native_result ||= result.new(select_command).native_result
+    end
+
     def select_command
       cmd.select_command
+    end
+
+    def select_command_json
+      cmd.select_command_json
     end
 
     def select_list_item(expression, expression_alias = nil)
@@ -33,7 +46,7 @@ module Pgsnap
 
     private
 
-    attr_reader :cmd
+    attr_reader :cmd, :result
 
     def construct_command
       select_list
@@ -41,10 +54,10 @@ module Pgsnap
       order_by_clause
     end
 
-    # optional
+    # start: optional
     def order_by_clause; end
 
-    # optional
     def table_expression; end
+    # end: optional
   end
 end

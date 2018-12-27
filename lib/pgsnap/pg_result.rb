@@ -19,7 +19,11 @@ module Pgsnap
       pg_result.ntuples
     end
 
-    def result
+    def json_result
+      native_result.first
+    end
+
+    def native_result
       number_of_rows == 1 ? values.first : values
     end
 
