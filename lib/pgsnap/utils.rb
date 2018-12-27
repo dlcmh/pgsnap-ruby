@@ -3,6 +3,13 @@
 module Pgsnap
   module Utils
     class << self
+      def build_clause(clause, content_array, separator)
+        return unless content_array.size.positive?
+
+        pretty_separator = "#{separator} " unless separator == ' '
+        "#{clause} #{content_array.join(pretty_separator)}"
+      end
+
       # '   i    wanna  be     squished'
       # => "i wanna be squished"
       #
@@ -14,6 +21,10 @@ module Pgsnap
         return content.map { |elem| squish(elem) } if content.is_a?(Array)
 
         content
+      end
+
+      def wrap_in_parentheses(content)
+        "(#{content})"
       end
 
       # [1, 'i wanna be wrapped in single quotes']

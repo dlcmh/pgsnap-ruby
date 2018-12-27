@@ -18,15 +18,19 @@ module Pgsnap
         "INNER JOIN #{table_reference} AS #{table_reference_alias} ON #{on}"
     end
 
+    def relation(query_class, relation_alias)
+      cmd.relation(query_class, relation_alias)
+    end
+
     def select_command
-      command.values.join(' ')
+      @select_command ||= stringified_command
     end
 
     def select_command_json
       "SELECT ROW_TO_JSON(relation) FROM (#{select_command}) relation"
     end
 
-    def select_list_item(expression, expression_alias = nil)
+    def select_list_item(expression, expression_alias)
       # handles 'table_name.*' expression
       return select_list << expression if expression[/^.+\.(\*)$/, 1]
 
@@ -51,15 +55,23 @@ module Pgsnap
     attr_reader :util
 
     def order_by_clause
-      command[:order_by_clause] ||= ['ORDER_BY']
+      command[:order_by_clause] ||= []
     end
 
     def select_list
-      command[:select_list] ||= ['SELECT']
+      command[:select_list] ||= []
+    end
+
+    def stringified_command
+      [
+        util.build_clause('SELECT', select_list, ','),
+        util.build_clause('FROM', table_expression, ','),
+        util.build_clause('ORDER_BY', order_by_clause, ',')
+      ].compact.join(' ')
     end
 
     def table_expression
-      command[:table_expression] ||= ['FROM']
+      command[:table_expression] ||= []
     end
   end
 end

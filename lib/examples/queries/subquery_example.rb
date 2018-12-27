@@ -3,18 +3,15 @@
 module Examples
   module Queries
     class SubqueryExample < Pgsnap::Query
+      CAR_MODELS = Examples::Queries::CarModels.new
+                                               .parenthesized_select_command
+
       def select_list
-        select_list_item 'sq1.year', :year
+        select_list_item 'car_models.year', :year
       end
 
       def table_expression
-        from car_model_sq, :sq1
-      end
-
-      private
-
-      def car_model_sq
-        Examples::Queries::CarModel.new.as_subquery
+        from CAR_MODELS, :car_models
       end
     end
   end

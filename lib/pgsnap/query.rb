@@ -5,6 +5,7 @@ module Pgsnap
     def initialize
       @cmd = Pgsnap::SelectCommand.new
       @result = Pgsnap::PgResult
+      @util = Pgsnap::Utils
       construct_command
     end
 
@@ -13,7 +14,7 @@ module Pgsnap
     end
 
     def inner_join(table_reference, table_reference_alias, on:)
-      cmd.inner_join(table_reference, table_reference_alias, on: on)
+      cmd.inner_join(table_reference, table_reference_alias, on)
     end
 
     def json_result
@@ -22,6 +23,10 @@ module Pgsnap
 
     def native_result
       @native_result ||= result.new(select_command).native_result
+    end
+
+    def relation(query_class, relation_alias = nil)
+      cmd.relation(query_class, relation_alias)
     end
 
     def select_command
@@ -40,13 +45,17 @@ module Pgsnap
       cmd.sort(sort_expression, direction)
     end
 
+    def parenthesized_select_command
+      util.wrap_in_parentheses(select_command)
+    end
+
     def values(*expression)
       cmd.values(*expression)
     end
 
     private
 
-    attr_reader :cmd, :result
+    attr_reader :cmd, :result, :util
 
     def construct_command
       select_list

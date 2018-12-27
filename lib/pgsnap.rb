@@ -4,7 +4,7 @@ require 'pgsnap/version'
 
 require 'pgsnap/configuration'
 
-require 'pgsnap/utils/content'
+require 'pgsnap/utils'
 
 require 'pgsnap/connection'
 require 'pgsnap/base_table'
