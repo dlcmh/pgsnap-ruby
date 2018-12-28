@@ -1,18 +1,58 @@
 # frozen_string_literal: true
 
+require 'json'
+
 module Pgsnap
   # :reek:TooManyMethods
   class Query
     def initialize
-      @_c = Pgsnap::SelectCommand.new
-      @_r = Pgsnap::PgResult
-      @_u = Pgsnap::Utils
       construct_command
     end
 
+    # Results
+    ##
+
+    # Executes a new instance of query on PostgreSQL and caches result
+    def json
+      @json ||= Pgsnap::PgResult.new(select_command_json).array_of_hashes
+    end
+
+    def json_string
+      @json_string ||= json.to_json
+    end
+
+    # Executes a new instance of query on PostgreSQL and caches result
+    def result
+      @result ||= Pgsnap::PgResult.new(select_command).native
+    end
+
+    # SELECT commands
+    ##
+
+    def as_subquery
+      _u.wrap_in_parentheses(select_command)
+    end
+
+    def select_command
+      _c.select_command
+    end
+
+    def select_command_json
+      _c.select_command_json
+    end
+
+    def select_command_json_string
+      _c.select_command_json_string
+    end
+
+
+    # command struct
     def command
       _c.command
     end
+
+    # Commands
+    ##
 
     def from(table_reference, table_reference_alias)
       _c.from(table_reference, table_reference_alias)
@@ -20,10 +60,6 @@ module Pgsnap
 
     def inner_join(table_reference, table_reference_alias, on:)
       _c.inner_join(table_reference, table_reference_alias, on)
-    end
-
-    def array_of_hashes
-      @array_of_hashes ||= _r.new(select_command_json).array_of_hashes
     end
 
     def group(group_expression)
@@ -38,20 +74,8 @@ module Pgsnap
       _c.limit(number_of_rows)
     end
 
-    def native_result
-      @native_result ||= _r.new(select_command).native_result
-    end
-
     def relation(query_class, relation_alias = nil)
       _c.relation(query_class, relation_alias)
-    end
-
-    def select_command
-      _c.select_command
-    end
-
-    def select_command_json
-      _c.select_command_json
     end
 
     def select_list_item(expression, expression_alias = nil)
@@ -62,18 +86,13 @@ module Pgsnap
       _c.sort(sort_expression, direction)
     end
 
-    def as_subquery
-      _u.wrap_in_parentheses(select_command)
-    end
-
     def values(*expression)
       _c.values(*expression)
     end
 
     private
 
-    attr_reader :_c, :_r, :_u
-
+    # constructs query from methods defined in subclass
     def construct_command
       select_list
       table_expression
@@ -81,12 +100,24 @@ module Pgsnap
       order_by_clause
     end
 
-    # start: optional
+    # optional
+    ##
+
     def group_by_clause; end
 
     def order_by_clause; end
 
     def table_expression; end
-    # end: optional
+
+    # aliases
+    ##
+
+    def _c
+      @_c ||= Pgsnap::SelectCommand.new
+    end
+
+    def _u
+      @_u ||= Pgsnap::Utils
+    end
   end
 end

@@ -20,15 +20,15 @@ module Pgsnap
     end
 
     def array_of_hashes
-      native_result.first
+      native.first
     end
 
-    def native_result
+    def native
       number_of_rows == 1 ? values.first : values
     end
 
-    def nested_json
-      native_result.first
+    def nested_json_result
+      native.first
     end
 
     def values

@@ -15,10 +15,6 @@ module Examples
         sort 1, :desc
         sort 'cb.id'
       end
-
-      def result
-        array_of_hashes
-      end
     end
   end
 end

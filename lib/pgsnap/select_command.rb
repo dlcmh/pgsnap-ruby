@@ -10,8 +10,22 @@ module Pgsnap
       @command = {}
     end
 
+    # SELECT commands
+    ##
+
+    def select_command
+      @select_command ||= stringified_command
+    end
+
+    def select_command_json
+      "SELECT JSON_AGG(relation) FROM (#{select_command}) relation"
+    end
+
+    # Commands
+
     def from(table_reference, table_reference_alias)
-      table_expression_struct << "#{table_reference} AS #{table_reference_alias}"
+      table_expression_struct <<
+        "#{table_reference} AS #{table_reference_alias}"
     end
 
     def group(expression)
@@ -33,14 +47,6 @@ module Pgsnap
 
     def relation(query_class, relation_alias)
       cmd.relation(query_class, relation_alias)
-    end
-
-    def select_command
-      @select_command ||= stringified_command
-    end
-
-    def select_command_json
-      "SELECT JSON_AGG(relation) FROM (#{select_command}) relation"
     end
 
     def select_list_item(expression, expression_alias)
