@@ -12,7 +12,6 @@ require 'examples/queries/employees'
 require 'examples/queries/pg_stat_activity'
 require 'examples/queries/single_row_values'
 require 'examples/queries/subquery_example'
-require 'examples/queries/test_nested_json_nesting'
 
 module Examples
   class Error < StandardError; end

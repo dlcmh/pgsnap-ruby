@@ -1,3 +1,9 @@
+PATH
+  remote: .
+  specs:
+    pgsnap (1.0.0.beta.5)
+      pg (~> 1.1)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -52,6 +58,7 @@ GEM
     parallel (1.12.1)
     parser (2.5.3.0)
       ast (~> 2.4.0)
+    pg (1.1.3)
     powerpack (0.1.2)
     pry (0.12.2)
       coderay (~> 1.1.0)
@@ -96,6 +103,7 @@ DEPENDENCIES
   guard-reek
   guard-rubocop
   minitest
+  pgsnap!
   pry
   rake
   reek
