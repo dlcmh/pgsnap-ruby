@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ['David Chin']
   spec.email         = ['dlcmhd@me.com']
 
-  spec.summary       = %q{Pgsnap makes working with PostgreSQL infinitely more pleasant.}
-  spec.description   = %q{Construct PostgreSQL statements in a more structured fashion.}
+  spec.summary       = %q{Pgsnap makes working with PostgreSQL queries infinitely more pleasant.}
+  spec.description   = %q{Construct composable, structured PostgreSQL queries in plain Ruby.}
   spec.homepage      = 'https://github.com/dlcmh/pgsnap'
   spec.license       = 'MIT'
   spec.required_ruby_version = '>= 2.0.0'
