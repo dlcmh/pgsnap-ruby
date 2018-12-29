@@ -2,6 +2,7 @@
 
 module Pgsnap
   class PgResult
+
     def initialize(select_command)
       @select_command = select_command
       set_pg_result

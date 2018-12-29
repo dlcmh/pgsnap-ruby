@@ -12,18 +12,18 @@ module Pgsnap
     # Results
     ##
 
-    # Executes a new instance of query on PostgreSQL and caches result
+    # Executes a new instance of query on PostgreSQL
     def json
-      @json ||= Pgsnap::PgResult.new(select_command_json).array_of_hashes
+      pgresult_instance(select_command_json).array_of_hashes
     end
 
     def json_string
-      @json_string ||= json.to_json
+      json.to_json
     end
 
-    # Executes a new instance of query on PostgreSQL and caches result
+    # Executes a new instance of query on PostgreSQL
     def result
-      @result ||= Pgsnap::PgResult.new(select_command).native
+      pgresult_instance(select_command).native
     end
 
     # SELECT commands
@@ -46,9 +46,22 @@ module Pgsnap
     end
 
 
+    # Metadata
+    ##
+
     # command struct
     def command
       _c.command
+    end
+
+    def columns
+      raise Error, 'Query has not executed yet' unless pgresult
+
+      pgresult.columns
+    end
+
+    def dbname
+      Pgsnap.configuration.dbname
     end
 
     # Commands
@@ -92,6 +105,8 @@ module Pgsnap
 
     private
 
+    attr_reader :pgresult
+
     # constructs query from methods defined in subclass
     def construct_command
       select_list
@@ -118,6 +133,14 @@ module Pgsnap
 
     def _u
       @_u ||= Pgsnap::Utils
+    end
+
+    # metadata
+    ##
+
+    def pgresult_instance(select_command)
+      @pgresult = Pgsnap::PgResult.new(select_command)
+      pgresult
     end
   end
 end
