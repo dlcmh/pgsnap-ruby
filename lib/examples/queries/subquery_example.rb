@@ -6,7 +6,7 @@ module Examples
       CAR_MODELS = Examples::Queries::CarModels.new.as_subquery
 
       def select_list
-        select_list_item 'car_models.year', :year
+        column 'car_models.year', :year
       end
 
       def table_expression

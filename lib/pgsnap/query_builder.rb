@@ -2,11 +2,11 @@
 
 module Pgsnap
   # :reek:TooManyMethods
-  class SelectCommand
+  class QueryBuilder
     attr_reader :command
 
     def initialize
-      @_u = Pgsnap::Utils
+      @util = Pgsnap::Utils
       @command = {}
     end
 
@@ -21,7 +21,11 @@ module Pgsnap
       "SELECT JSON_AGG(relation) FROM (#{select_command}) relation"
     end
 
-    # Commands
+    # Setters
+
+    def condition(expression)
+      where_clause_struct << expression
+    end
 
     def from(table_reference, table_reference_alias)
       table_expression_struct <<
@@ -53,7 +57,7 @@ module Pgsnap
       cmd.relation(query_class, relation_alias)
     end
 
-    def select_list_item(expression, expression_alias)
+    def column(expression, expression_alias)
       # handles 'table_name.*' expression
       return select_list_struct << expression if expression[/^.+\.(\*)$/, 1]
 
@@ -67,15 +71,15 @@ module Pgsnap
     end
 
     def values(*expression)
-      squished = _u.squish(expression)
-      wrapped_in_single_quotes = _u.wrap_in_single_quotes(squished)
-      comma_joined = _u.join_with_comma(wrapped_in_single_quotes)
+      squished = util.squish(expression)
+      wrapped_in_single_quotes = util.wrap_in_single_quotes(squished)
+      comma_joined = util.join_with_comma(wrapped_in_single_quotes)
       "(VALUES(#{comma_joined}))"
     end
 
     private
 
-    attr_reader :_u
+    attr_reader :util
 
     def limit_clause_struct
       command[:limit_clause] ||= []
@@ -103,21 +107,25 @@ module Pgsnap
     end
 
     def stringified_command
-      _u.join_with_space([
-        _u.build_clause('SELECT', select_list_struct, ','),
-        _u.build_clause('FROM', table_expression_struct, ' '),
-        _u.build_clause('GROUP BY', group_by_clause_struct, ','),
-        _u.build_clause(
+      util.join_with_space([
+        util.build_clause('SELECT', select_list_struct, ','),
+        util.build_clause('FROM', table_expression_struct, ' '),
+        util.build_clause('GROUP BY', group_by_clause_struct, ','),
+        util.build_clause(
           'ORDER BY',
           order_by_clause_struct.map { |item| item.join(' ') },
           ','
         ),
-        _u.build_scalar('LIMIT', limit_clause_struct.first)
+        util.build_scalar('LIMIT', limit_clause_struct.first)
       ].compact)
     end
 
     def table_expression_struct
       command[:table_expression] ||= []
+    end
+
+    def where_clause_struct
+      command[:where_clause] ||= []
     end
   end
 end

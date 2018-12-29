@@ -4,7 +4,7 @@ module Examples
   module Queries
     class SingleRowValues < Pgsnap::Query
       def select_list
-        select_list_item 'dummy.*'
+        column 'dummy.*'
       end
 
       def table_expression

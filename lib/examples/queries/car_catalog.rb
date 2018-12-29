@@ -9,9 +9,9 @@ module Examples
       end
 
       def select_list
-        select_list_item 'cb.name', :brand
-        select_list_item 'cm.year', :year
-        select_list_item 'cm.name', :name
+        column 'cb.name', :brand
+        column 'cm.year', :year
+        column 'cm.name', :name
       end
 
       def order_by_clause

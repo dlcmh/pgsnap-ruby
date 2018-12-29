@@ -4,8 +4,8 @@ module Examples
   module Queries
     class CarModels < Pgsnap::Query
       def select_list
-        select_list_item 'cm.year', :year
-        select_list_item 'cm.name', :name
+        column 'cm.year', :year
+        column 'cm.name', :name
       end
 
       def table_expression

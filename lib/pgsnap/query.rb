@@ -6,6 +6,8 @@ module Pgsnap
   # :reek:TooManyMethods
   class Query
     def initialize
+      @qb = Pgsnap::QueryBuilder.new
+      @util = Pgsnap::Utils
       construct_command
     end
 
@@ -30,19 +32,19 @@ module Pgsnap
     ##
 
     def as_subquery
-      _u.wrap_in_parentheses(select_command)
+      util.wrap_in_parentheses(select_command)
     end
 
     def select_command
-      _c.select_command
+      qb.select_command
     end
 
     def select_command_json
-      _c.select_command_json
+      qb.select_command_json
     end
 
     def select_command_json_string
-      _c.select_command_json_string
+      qb.select_command_json_string
     end
 
 
@@ -51,7 +53,7 @@ module Pgsnap
 
     # command struct
     def command
-      _c.command
+      qb.command
     end
 
     def columns
@@ -64,57 +66,69 @@ module Pgsnap
       Pgsnap.configuration.dbname
     end
 
-    # Commands
+    # Setters
     ##
 
+    def condition(expression)
+      qb.condition(expression)
+    end
+
     def from(table_reference, table_reference_alias)
-      _c.from(table_reference, table_reference_alias)
+      qb.from(table_reference, table_reference_alias)
     end
 
     def inner_join(table_reference, table_reference_alias, on:)
-      _c.inner_join(table_reference, table_reference_alias, on)
+      qb.inner_join(table_reference, table_reference_alias, on)
     end
 
     def group(group_expression)
-      _c.group(group_expression)
+      qb.group(group_expression)
     end
 
     def json_agg(nesting_definition)
-      _c.json_agg(nesting_definition)
+      qb.json_agg(nesting_definition)
     end
 
     def limit(number_of_rows)
-      _c.limit(number_of_rows)
+      qb.limit(number_of_rows)
     end
 
     def literal(query_string)
-      _c.literal(query_string)
+      qb.literal(query_string)
     end
 
     def relation(query_class, relation_alias = nil)
-      _c.relation(query_class, relation_alias)
+      qb.relation(query_class, relation_alias)
     end
 
-    def select_list_item(expression, expression_alias = nil)
-      _c.select_list_item(expression, expression_alias)
+    def column(expression, expression_alias = nil)
+      qb.column(expression, expression_alias)
     end
 
     def sort(sort_expression, direction = 'ASC')
-      _c.sort(sort_expression, direction)
+      qb.sort(sort_expression, direction)
     end
 
     def values(*expression)
-      _c.values(*expression)
+      qb.values(*expression)
+    end
+
+    # Operators
+    ##
+
+    def inop(values)
+      "IN (#{util.in_operator(values)})"
     end
 
     private
 
-    attr_reader :pgresult
+    attr_reader :pgresult, :qb, :util
 
     # constructs query from methods defined in subclass
     def construct_command
       select_list
       table_expression
+      where_clause
       group_by_clause
       order_by_clause
     end
@@ -128,16 +142,7 @@ module Pgsnap
 
     def table_expression; end
 
-    # aliases
-    ##
-
-    def _c
-      @_c ||= Pgsnap::SelectCommand.new
-    end
-
-    def _u
-      @_u ||= Pgsnap::Utils
-    end
+    def where_clause; end
 
     # metadata
     ##

@@ -16,7 +16,7 @@ module Pgsnap
 
     def order_by_clause; end
 
-    def select_list_item(expression, expression_alias)
+    def column(expression, expression_alias)
       # handles 'table_name.*' expression
       raise(
         Error,

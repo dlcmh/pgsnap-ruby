@@ -5,8 +5,8 @@ module Examples
     class CarModelsNestedByCarBrandId < Pgsnap::Query
       class Nesting < Pgsnap::NestedJson
         def select_list
-          select_list_item 'cm.year', :year
-          select_list_item 'cm.name', :name
+          column 'cm.year', :year
+          column 'cm.name', :name
         end
 
         def order_by_clause
@@ -20,8 +20,8 @@ module Examples
       end
 
       def select_list
-        select_list_item 'cm.car_brand_id', :car_brand_id
-        select_list_item json_agg(Nesting.new.nesting), :models
+        column 'cm.car_brand_id', :car_brand_id
+        column json_agg(Nesting.new.nesting), :models
       end
 
       def group_by_clause

@@ -10,8 +10,8 @@ require 'pgsnap/connection'
 require 'pgsnap/base_table'
 require 'pgsnap/nested_json'
 require 'pgsnap/pg_result'
-require 'pgsnap/select_command'
 require 'pgsnap/query'
+require 'pgsnap/query_builder'
 require 'pgsnap/table_columns_cache'
 
 module Pgsnap

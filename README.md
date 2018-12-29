@@ -16,8 +16,7 @@ module Queries
 end
 ```
 
-<strong>In the case of a Ruby on Rails project</strong> (automatically switches
-database based on the `RAILS_ENV` value)
+<strong>In the case of a Ruby on Rails project</strong> (automatically switches database based on the `RAILS_ENV` value)
 
 ```ruby
 module Queries
@@ -29,13 +28,13 @@ module Queries
 end
 ```
 
-Inherit the configuration file in your query, named `queries/query_for_one.rb`:
+Inherit from the configuration file in your query subclass, named `queries/query_for_one.rb`:
 
 ```ruby
 module Queries
   class Hello < Queries::Config
     def select_list
-      select_list_item %('hello'), :greeting
+      column %('hello'), :greeting
     end
   end
 end
@@ -53,8 +52,7 @@ pry(main)> q.json
 #=> [{"greeting"=>"hello"}]
 ```
 
-Let's also try querying the base tables in your database, in a file named
-`queries/base_tables.rb`:
+Let's also try querying the base tables in your database, in a file named `queries/base_tables.rb`:
 
 ```ruby
 module Queries

@@ -51,6 +51,7 @@ task :db_setup do
         id BIGSERIAL PRIMARY KEY,
         year INTEGER NOT NULL,
         name VARCHAR NOT NULL,
+        obsolete_on TIMESTAMP WITH TIME ZONE,
         car_brand_id BIGINT REFERENCES car_brands(id)
       )
     "
@@ -60,26 +61,26 @@ task :db_setup do
 
   cmd = <<~SQL
   psql -d pgsnap -c "
-    INSERT INTO car_models (year, name, car_brand_id)
+    INSERT INTO car_models (year, name, obsolete_on, car_brand_id)
     VALUES
-      (2017, 'TT', (SELECT id FROM car_brands where name = 'Audi')),
-      (2018, 'TT', (SELECT id FROM car_brands where name = 'Audi')),
-      (2019, 'TT', (SELECT id FROM car_brands where name = 'Audi')),
-      (2017, 'X5', (SELECT id FROM car_brands where name = 'BMW')),
-      (2018, 'X5', (SELECT id FROM car_brands where name = 'BMW')),
-      (2019, 'X5', (SELECT id FROM car_brands where name = 'BMW')),
-      (2017, 'Civic', (SELECT id FROM car_brands where name = 'Honda')),
-      (2018, 'Civic', (SELECT id FROM car_brands where name = 'Honda')),
-      (2019, 'Civic', (SELECT id FROM car_brands where name = 'Honda')),
-      (2017, 'AMG E63 S', (SELECT id FROM car_brands where name = 'Mercedes-Benz')),
-      (2018, 'AMG E63 S', (SELECT id FROM car_brands where name = 'Mercedes-Benz')),
-      (2019, 'AMG E63 S', (SELECT id FROM car_brands where name = 'Mercedes-Benz')),
-      (2017, 'ES 250', (SELECT id FROM car_brands where name = 'Lexus')),
-      (2018, 'ES 350', (SELECT id FROM car_brands where name = 'Lexus')),
-      (2019, 'ES 300h', (SELECT id FROM car_brands where name = 'Lexus')),
-      (2017, 'XC90', (SELECT id FROM car_brands where name = 'Volvo')),
-      (2018, 'XC90', (SELECT id FROM car_brands where name = 'Volvo')),
-      (2019, 'XC90', (SELECT id FROM car_brands where name = 'Volvo'));
+      (2017, 'TT', NULL, (SELECT id FROM car_brands where name = 'Audi')),
+      (2018, 'TT', TO_DATE('20191231', 'YYYYMMDD'), (SELECT id FROM car_brands where name = 'Audi')),
+      (2019, 'TT', NULL, (SELECT id FROM car_brands where name = 'Audi')),
+      (2017, 'X5', NULL, (SELECT id FROM car_brands where name = 'BMW')),
+      (2018, 'X5', NULL, (SELECT id FROM car_brands where name = 'BMW')),
+      (2019, 'X5', NULL, (SELECT id FROM car_brands where name = 'BMW')),
+      (2017, 'Civic', NULL, (SELECT id FROM car_brands where name = 'Honda')),
+      (2018, 'Civic', NULL, (SELECT id FROM car_brands where name = 'Honda')),
+      (2019, 'Civic', NULL, (SELECT id FROM car_brands where name = 'Honda')),
+      (2017, 'AMG E63 S', NULL, (SELECT id FROM car_brands where name = 'Mercedes-Benz')),
+      (2018, 'AMG E63 S', NULL, (SELECT id FROM car_brands where name = 'Mercedes-Benz')),
+      (2019, 'AMG E63 S', NULL, (SELECT id FROM car_brands where name = 'Mercedes-Benz')),
+      (2017, 'ES 250', TO_DATE('20181231', 'YYYYMMDD'), (SELECT id FROM car_brands where name = 'Lexus')),
+      (2018, 'ES 350', NULL, (SELECT id FROM car_brands where name = 'Lexus')),
+      (2019, 'ES 300h', NULL, (SELECT id FROM car_brands where name = 'Lexus')),
+      (2017, 'XC90', NULL, (SELECT id FROM car_brands where name = 'Volvo')),
+      (2018, 'XC90', NULL, (SELECT id FROM car_brands where name = 'Volvo')),
+      (2019, 'XC90', NULL, (SELECT id FROM car_brands where name = 'Volvo'));
     "
   SQL
   p cmd
