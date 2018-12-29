@@ -14,7 +14,7 @@ module Pgsnap
     ##
 
     def select_command
-      @select_command ||= stringified_command
+      @select_command ||= literal_query_string || stringified_command
     end
 
     def select_command_json
@@ -39,6 +39,10 @@ module Pgsnap
 
     def limit(number_of_rows)
       limit_clause_struct << number_of_rows
+    end
+
+    def literal(query_string)
+      literal_query_string_struct << query_string
     end
 
     def json_agg(nesting_definition)
@@ -75,6 +79,15 @@ module Pgsnap
 
     def limit_clause_struct
       command[:limit_clause] ||= []
+    end
+
+    def literal_query_string
+      command[:literal_query_string].join if
+        literal_query_string_struct.size > 0
+    end
+
+    def literal_query_string_struct
+      command[:literal_query_string] ||= []
     end
 
     def group_by_clause_struct

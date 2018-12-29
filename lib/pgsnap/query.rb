@@ -87,6 +87,10 @@ module Pgsnap
       _c.limit(number_of_rows)
     end
 
+    def literal(query_string)
+      _c.literal(query_string)
+    end
+
     def relation(query_class, relation_alias = nil)
       _c.relation(query_class, relation_alias)
     end

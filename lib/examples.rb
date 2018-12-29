@@ -4,6 +4,7 @@ require 'examples/pgsnap_config'
 
 require 'examples/base_tables/car_models'
 
+require 'examples/queries/base_tables'
 require 'examples/queries/car_brands'
 require 'examples/queries/car_catalog'
 require 'examples/queries/car_models'
