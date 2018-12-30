@@ -3,12 +3,6 @@
 module Examples
   module Queries
     class CarBrands < Pgsnap::Query
-      # attr_reader :car_brands
-
-      # def initialize(car_brands = nil)
-      #   @car_brands = car_brands
-      # end
-
       def table_expression
         from :car_brands, :cb
       end

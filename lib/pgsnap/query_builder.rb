@@ -14,7 +14,7 @@ module Pgsnap
     ##
 
     def select_command
-      @select_command ||= literal_query_string || stringified_command
+      literal_query_string || stringified_command
     end
 
     def select_command_json
@@ -110,6 +110,7 @@ module Pgsnap
       util.join_with_space([
         util.build_clause('SELECT', select_list_struct, ','),
         util.build_clause('FROM', table_expression_struct, ' '),
+        util.build_clause('WHERE', where_clause_struct, ' '),
         util.build_clause('GROUP BY', group_by_clause_struct, ','),
         util.build_clause(
           'ORDER BY',

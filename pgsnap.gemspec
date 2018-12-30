@@ -32,7 +32,7 @@ Gem::Specification.new do |spec|
   spec.files = Dir.chdir(File.expand_path('..', __FILE__)) do
     `git ls-files -z`.split("\x0").reject do |f|
       f.match(%r{^(test|spec|features|bin)/}) ||
-        f.match(%r{^(Guardfile|Rakefile|Gemfile)}) ||
+        f.match(%r{^(Guardfile|Rakefile|Gemfile|TODO)}) ||
         f.match(%r{(examples|gemspec)})
     end
   end

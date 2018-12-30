@@ -18,10 +18,6 @@ module Examples
         sort :brand
         sort :year, :desc
       end
-
-      def result
-        json_result
-      end
     end
   end
 end

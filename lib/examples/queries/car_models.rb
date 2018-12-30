@@ -6,6 +6,7 @@ module Examples
       def select_list
         column 'cm.year', :year
         column 'cm.name', :name
+        column 'cm.obsolete_on', :obsolete_on
       end
 
       def table_expression
@@ -15,10 +16,6 @@ module Examples
       def order_by_clause
         sort 1
         sort 2, :desc
-      end
-
-      def result
-        array_of_hashes
       end
     end
   end
