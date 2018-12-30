@@ -1,4 +1,10 @@
-Construct composable, structured, PostgreSQL queries in plain Ruby.
+# Pgsnap
+
+Construct testable, composable, structured, PostgreSQL queries in plain Ruby.
+
+## Installation
+
+Add `gem 'pgsnap'` to your project's `Gemfile` and run `bundle install`.
 
 ## Configure database connection
 
