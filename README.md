@@ -1,6 +1,6 @@
 # Pgsnap
 
-Construct testable, composable, structured, PostgreSQL queries in plain Ruby.
+Joyfully construct testable, composable, structured, PostgreSQL queries in plain Ruby.
 
 ## Installation
 
