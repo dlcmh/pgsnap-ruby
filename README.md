@@ -50,10 +50,13 @@ Try it out in the console:
 
 ```ruby
 pry(main)> q = Queries::Hello.new
+
 pry(main)> q.result
 #=> ["hello"]
+
 pry(main)> q.columns
 #=> [:greeting]
+
 pry(main)> q.json
 #=> [{"greeting"=>"hello"}]
 ```
@@ -78,6 +81,7 @@ Try it out in the console:
 
 ```ruby
 pry(main)> q = Queries::BaseTables.new
+
 pry(main)> q.result
 #=> [["schema_migrations"], ["ar_internal_metadata"], ["users"], ["questions"],["learning_units"]]
 ```
